@@ -7,6 +7,8 @@ import requests
 from datetime import date
 from dotenv import load_dotenv
 from matplotlib.ticker import FuncFormatter
+import geopandas
+import contextily as cx
 
 # Load environment variables from .env file
 load_dotenv()
@@ -144,6 +146,14 @@ def plot_price_trends(df, cpi_df):
 
 def plot_item_price_summary(df):
     """Generates a bar chart comparing the start and end prices."""
+    # --- Font and Style Setup ---
+    try:
+        plt.rcParams['font.family'] = 'Roboto'
+    except RuntimeError:
+        print("Roboto font not found, using default.")
+        
+    plt.style.use("seaborn-v0_8-whitegrid")
+    
     price_data = []
     start_date = df["date"].iloc[0]
     end_date = df["date"].iloc[-1]
@@ -157,13 +167,12 @@ def plot_item_price_summary(df):
 
     df_plot = pd.DataFrame(price_data)
 
-    plt.style.use("seaborn-v0_8-whitegrid")
     fig, ax = plt.subplots(figsize=(12, 7))
 
     sns.barplot(data=df_plot, x="item", y="price", hue="date_str", ax=ax, palette="viridis")
     
-    ax.set_title("Price Increase of In-N-Out Menu Items", fontsize=16, pad=20)
-    ax.set_ylabel("Price ($)")
+    ax.set_title("Price Increase of In-N-Out Menu Items", fontsize=16, pad=20, fontweight='bold')
+    ax.set_ylabel("") # Remove y-axis label
     ax.set_xlabel("")
     ax.legend(title="Date")
     plt.tight_layout()
@@ -171,6 +180,41 @@ def plot_item_price_summary(df):
     save_path = os.path.join(PLOT_DIR, "item_price_increases.png")
     plt.savefig(save_path, dpi=300)
     print(f"📊 Bar chart saved to '{save_path}'")
+
+def plot_locations_map(data):
+    """
+    Creates a map of all In-N-Out locations from the dataset.
+    """
+    # --- Font and Style Setup ---
+    try:
+        plt.rcParams['font.family'] = 'Roboto'
+    except RuntimeError:
+        print("Roboto font not found, using default.")
+
+    df = pd.DataFrame(data)
+    df = df.dropna(subset=['lat', 'lon'])
+    df = df.drop_duplicates(subset=['lat', 'lon'])
+
+    if df.empty:
+        print("No location data to plot.")
+        return
+
+    gdf = geopandas.GeoDataFrame(
+        df, geometry=geopandas.points_from_xy(df.lon, df.lat), crs="EPSG:4326"
+    )
+
+    # Plotting
+    fig, ax = plt.subplots(figsize=(10, 10))
+    gdf.to_crs(epsg=3857).plot(ax=ax, color='red', markersize=50, edgecolor='black')
+    cx.add_basemap(ax, source=cx.providers.CartoDB.Positron)
+    
+    ax.set_title("In-N-Out Burger locations used in this analysis", fontweight='bold')
+    ax.set_axis_off()
+    
+    plt.tight_layout()
+    save_path = os.path.join(PLOT_DIR, "locations_map.png")
+    plt.savefig(save_path, dpi=300)
+    print(f"🗺️  Map saved to '{save_path}'")
 
 def main():
     """Analyzes and visualizes In-N-Out menu price changes."""
@@ -199,6 +243,7 @@ def main():
 
     plot_price_trends(df, cpi_df)
     plot_item_price_summary(df)
+    plot_locations_map(data)
 
 if __name__ == "__main__":
     main() 

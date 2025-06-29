@@ -8,6 +8,12 @@ This project uses OpenAI's GPT-4o model to analyze screenshots of In-N-Out drive
 
 ![In-N-Out Double-Double Price vs. Inflation](plots/doubledouble_price_vs_inflation.png)
 
+## Geographic scope
+
+All data was collected from In-N-Out locations in the greater Los Angeles area. The map below shows the specific restaurant locations included in this analysis.
+
+![Map of In-N-Out locations](plots/locations_map.png)
+
 ## Data source
 
 In-N-Out does not publicly release historical menu pricing. To work around this limitation, this project uses screenshots from Google Street View's historical imagery. This provides a snapshot of menu prices at different locations and times, creating a unique dataset for tracking price changes.
@@ -36,7 +42,7 @@ The model returns a JSON object with the extracted data which is then flattened 
 
 2.  **Set up environment variables**
 
-    The script requires an OpenAI API key and a Bureau of Labor Statistics (BLS) API key. Create a `.env` file in the root of the project and add the keys. You can get a free BLS key from their [website](https://data.bls.gov/registrationEngine/).
+    The script requires API keys for OpenAI and the Bureau of Labor Statistics (BLS). Create a `.env` file in the root of the project and add the keys. You can get a free BLS key from their [website](https://data.bls.gov/registrationEngine/).
 
     ```
     OPENAI_API_KEY="your-openai-api-key-here"
@@ -77,6 +83,7 @@ The script will output a clear takeaway, explaining how the item's price has cha
 │   └── ...                       # Input images of menus
 ├── plots/
 │   ├── doubledouble_price_vs_inflation.png # Output chart
+│   ├── locations_map.png         # Location map
 │   └── ...                       # Other generated plots
 ├── scripts/
 │   ├── extract_menu_data.py      # Main data extraction script
