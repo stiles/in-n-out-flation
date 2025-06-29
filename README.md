@@ -14,6 +14,8 @@ This project combines two key data sources:
 - **Menu prices**: Sourced from historical Google Street View imagery of In-N-Out drive-thru menus. The image quality varies depending on the generation of the Street View camera and the angle of the shot. As a result, some menu items are occasionally listed as `null` where the model could not confidently extract a price.
 - **Inflation data**: The analysis uses the Consumer Price Index (CPI) for "Food Away From Home" (Series ID `CUUR0000SEFV`), sourced directly from the US Bureau of Labor Statistics. This is used because it provides a more accurate benchmark for restaurant price inflation than the general, all-items CPI.
 
+*Analysis inspired by [ShoPhoCho's post on TikTok](https://www.tiktok.com/@shophocho/video/7507878402473446698)*.
+
 ## Geographic scope
 
 All data was collected from In-N-Out locations in the greater Los Angeles area. The map below shows the specific restaurant locations included in this analysis.
