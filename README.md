@@ -1,4 +1,4 @@
-# In-n-out price tracker
+# In-N-Out Burger inflation tracker
 
 This project uses OpenAI's GPT-4o model to analyze screenshots of In-N-Out drive-thru menus from Google Street View. It extracts menu item prices, calorie counts and the date and location of the photo, compiling the data into a single JSON file. This allows for tracking menu price inflation over time.
 
@@ -11,6 +11,8 @@ This project uses OpenAI's GPT-4o model to analyze screenshots of In-N-Out drive
 ## Data source
 
 In-N-Out does not publicly release historical menu pricing. To work around this limitation, this project uses screenshots from Google Street View's historical imagery. This provides a snapshot of menu prices at different locations and times, creating a unique dataset for tracking price changes.
+
+The image quality varies depending on the generation of the Street View camera and the angle of the shot. As a result, some menu items are occasionally listed as `null` in the derived data where the model could not confidently extract a price.
 
 ## How it works
 
